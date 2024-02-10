@@ -1,14 +1,12 @@
-import { Input } from './components/ui/input'
 import './App.css'
-import { Button } from './components/ui/button'
+import Bookings from './features/bookings/pages/Bookings'
 
 function App() {
 
 
   return (
     <> 
-    <Input/>
-      <Button>Hello world</Button>
+      <Bookings/>
     </>
   )
 }

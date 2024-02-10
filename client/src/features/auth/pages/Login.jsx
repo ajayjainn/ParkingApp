@@ -36,7 +36,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const dispatch = useDispatch()
-  const [loginUser, {data, isLoading, isSuccess}] = useLoginUserMutation();
+  const [loginUser] = useLoginUserMutation();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,7 +80,7 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="Enter Password" {...field} />
+                    <Input type="password" placeholder="Enter Password" {...field} />
                   </FormControl>
                   <FormMessage/>
                 </FormItem>
@@ -93,7 +93,7 @@ export function LoginForm() {
       </CardContent>
       <CardFooter>
         <p className="text-center text-gray-500 text-base">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link to="/register" className="text-blue-500 hover:underline">
             Sign up
           </Link>

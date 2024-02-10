@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import { store } from './app/store.js'
 import { LoginForm } from './features/auth/pages/Login.jsx'
 import { RegisterForm } from './features/auth/pages/RegisterPage.jsx'
+import Navbar from './components/ui/navbar.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,8 +31,10 @@ const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <React.StrictMode>    
     <Provider store={store}>
+      <Navbar/>
+
       <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>,
