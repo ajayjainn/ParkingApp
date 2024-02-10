@@ -9,7 +9,8 @@ import {
 } from "react-router-dom";
 import { Provider } from 'react-redux'
 import { store } from './app/store.js'
-
+import { LoginForm } from './features/auth/pages/Login.jsx'
+import { RegisterForm } from './features/auth/pages/RegisterPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,14 @@ const router = createBrowserRouter([
     element:  <App/>,
     errorElement: <NotFound />,
   },
+  {
+    path: "/login",
+    element: <LoginForm />,
+  },
+  {
+    path: "/register",
+    element: <RegisterForm/>
+  }
 ]);
 
 
