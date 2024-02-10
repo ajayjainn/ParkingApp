@@ -13,6 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import {useRegisterUserMutation} from '../authApiSlice.js'
+
 import {
   Card,
   CardContent,
@@ -33,12 +35,21 @@ const formSchema = z.object({
 });
 
 export function RegisterForm() {
+
+  const [registerUser,{data,isLoading,isSuccess}] = useRegisterUserMutation()
+
   const form = useForm({
     resolver: zodResolver(formSchema),
-  });
+  })
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log(values);
+    const reg = await registerUser(values).unwrap
+    if(reg){
+      console.log(reg)
+    }else{
+      console.log('error')
+    }
   }
 
   return (
@@ -46,7 +57,7 @@ export function RegisterForm() {
       
     <Card className="card w-96">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle>Register</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>

@@ -23,6 +23,9 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { useLoginUserMutation } from "../authApiSlice";
+import { useDispatch } from "react-redux";
+import {login} from '../authSlice.js'
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address."),
@@ -32,6 +35,8 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const dispatch = useDispatch()
+  const [loginUser, {data, isLoading, isSuccess}] = useLoginUserMutation();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,8 +45,10 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values) {
-    console.log(values);
+  async function onSubmit(values) {
+    const data = await loginUser(values).unwrap()
+    console.log(data)
+    dispatch(login(data))
   }
 
   return (
