@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 
 const formSchema = z.object({
   uname: z.string(),
@@ -47,6 +47,7 @@ export function RegisterForm() {
     const reg = await registerUser(values).unwrap
     if(reg){
       console.log(reg)
+      redirect('/login')
     }else{
       console.log('error')
     }

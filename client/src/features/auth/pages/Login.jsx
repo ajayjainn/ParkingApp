@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/card";
 
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import { useLoginUserMutation } from "../authApiSlice";
 import { useDispatch } from "react-redux";
 import {login} from '../authSlice.js'
@@ -49,6 +49,7 @@ export function LoginForm() {
     const data = await loginUser(values).unwrap()
     console.log(data)
     dispatch(login(data))
+    redirect('/')
   }
 
   return (

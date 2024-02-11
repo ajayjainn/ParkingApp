@@ -35,10 +35,11 @@ function extractIdAndCoordinates(data) {
   const ret = [];
   data.forEach((item) => {
     const coordinates = JSON.parse(item.coordinates);
-    ret.push({ id: item.id, x: coordinates.x, y: coordinates.y });
+    ret.push({ id: item.id, x: coordinates.x, y: coordinates.y  , cost : item.basePrice , total_spaces : item.total_spaces});
   });
   return ret;
 }
+
 
 router.get("/nearby", async (req, res) => {
 
@@ -47,6 +48,7 @@ router.get("/nearby", async (req, res) => {
     "X-QUERY-VIZ": "",
     "X-SELECT-STRATEGY": "",
   };
+  
 
   const resp = await fetch(`${URL}/rest/ParkingLot`, {
     method: "GET",
@@ -62,9 +64,11 @@ router.get("/nearby", async (req, res) => {
       dist: getDistanceFromLatLonInKm(
         parkingLot.x,
         parkingLot.y,
-        req.body.x,
-        req.body.y
+        req.query.x,
+        req.query.y
       ),
+      cost : parkingLot.cost ,
+      total_spaces : parkingLot.total_spaces
     };
   });
  
@@ -72,17 +76,69 @@ router.get("/nearby", async (req, res) => {
   const trimmedArray = newArray.slice(0, 10);
 
   const promises = trimmedArray.map(async (i) => {
-    const available = await status(req.user, i.id, req.body.from, req.body.to);
+    const available = await status(req.user, i.id, req.query.from, req.query.to);
     if (!available.error) {
       return i;
     }
   });
 
   const lastArray = await Promise.all(promises);
+  console.log(lastArray)
   res.send(lastArray.slice(0, 3));
 
 });
 
+router.get("/nearby/now", async (req, res) => {
+
+  const headers = {
+    "X-API-KEY": apiKey,
+    "X-QUERY-VIZ": "",
+    "X-SELECT-STRATEGY": "",
+  };
+  
+
+  const resp = await fetch(`${URL}/rest/ParkingLot`, {
+    method: "GET",
+    headers: headers,
+  });
+  const data = await resp.json();
+  const parkingSpots = data.data;
+  const parkingCoordinates = extractIdAndCoordinates(parkingSpots);
+
+  let newArray = parkingCoordinates.map((parkingLot) => {
+    return {
+      id: parkingLot.id,
+      dist: getDistanceFromLatLonInKm(
+        parkingLot.x,
+        parkingLot.y,
+        req.query.x,
+        req.query.y
+      ),
+      cost : parkingLot.cost
+    };
+  });
+ 
+  newArray.sort((a, b) => a.dist - b.dist);
+  const trimmedArray = newArray.slice(0, 10);
+  let a  = 0 ;
+  const promises = trimmedArray.map(async (i) => {
+    a++ ;
+    const available = await fetch("http://localhost:5000/car_lot",{
+      method:"POST",
+      body:{
+        curr_time: req.query.from,
+        number: a%3 ,
+        total_spaces: i.total_spaces,
+
+      }
+    })
+  });
+
+  const lastArray = await Promise.all(promises);
+  console.log(lastArray)
+  res.send(lastArray.slice(0, 3));
+
+});
 router.get("/", async (req, res) => {
 
   const queryParams = new URLSearchParams();

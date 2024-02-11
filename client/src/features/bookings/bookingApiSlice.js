@@ -13,9 +13,12 @@ const bookingApiSlice = baseApiSlice.injectEndpoints({
       })
     }),
     fetchNearbyParkingSpots: build.query({
-      query: (x, y) => `nearby?x=${x}&y=${y}`,
+      query: ({x, y,from,to}) => `booking/nearby?x=${x}&y=${y}&from=${from}&to=${to}`,
+    }),
+    fetchCurrentNearbyParkingSpots: build.query({
+      query: ({x, y,from,to}) => `booking/nearby/now?x=${x}&y=${y}&from=${from}&to=${to}`
     })
   })
 })
 
-export const { useGetUserBookingsQuery, useCreateBookingMutation, useFetchNearbyParkingSpotsQuery } = bookingApiSlice
+export const { useGetUserBookingsQuery, useCreateBookingMutation, useFetchNearbyParkingSpotsQuery ,useFetchCurrentNearbyParkingSpotsQuery} = bookingApiSlice
